@@ -18,8 +18,8 @@
                 <!-- 카테고리 글들을 모아둔 페이지인 /categories/뻘글 주소의 글로 링크 연결-->
                 <!--category[1].size 로 해당 카테고리를 가진 글의 개수 표시--> 
                 {% for category in site.categories %}
-                    {% if category[0] == "뻘글" %}
-                        <li><a href="/categories/뻘글" class="">뻘글 ({{category[1].size}})</a></li>
+                    {% if category[0] == "etc" %}
+                        <li><a href="/categories/etc" class="">뻘글 ({{category[1].size}})</a></li>
                     {% endif %}
                 {% endfor %}
             </ul>
