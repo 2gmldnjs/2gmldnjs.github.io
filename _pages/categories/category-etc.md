@@ -1,5 +1,5 @@
 ---
-title: "뻘글"
+title: "etc"
 layout: archive
 permalink: categories/etc
 author_profile: true
