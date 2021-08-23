@@ -32,7 +32,7 @@ finish 누른 후 실행창
 
 ![4](https://user-images.githubusercontent.com/69203345/130451223-3c430c5e-fe98-4d67-8b31-ca007d679d6d.PNG)
 
-activity_main,xml 탭을 열면 이런걸 볼 수 있는데
+activity_main.xml 탭을 열면 이런걸 볼 수 있는데
 
 두개다 만들 앱의 화면이다 다만,
 
