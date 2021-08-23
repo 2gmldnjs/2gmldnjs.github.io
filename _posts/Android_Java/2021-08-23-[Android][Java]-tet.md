@@ -2,7 +2,7 @@
 title:  "[Android][Java] tet"
 
 categories: android_java
-tags: android,java
+tags: [android,java]
 
 toc: true
 toc_sticky: true
