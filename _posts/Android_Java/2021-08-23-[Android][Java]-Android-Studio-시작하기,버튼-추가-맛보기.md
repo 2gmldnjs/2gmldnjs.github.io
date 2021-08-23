@@ -14,23 +14,23 @@ date: 2021-08-23 21:48:33 \
 
 ## 프로젝트 파일 만들기
 
-![1](C:\Users\User\Desktop\업로드용 사진\1.PNG)
+![1](https://user-images.githubusercontent.com/69203345/130451105-af328e95-0af2-4516-a2d4-2aeda78ea99f.PNG)
 
 new project → Empty Activity 클릭 한후 이름은 원하는걸로
 
-![2](C:\Users\User\Desktop\업로드용 사진\2.PNG)
+![2](https://user-images.githubusercontent.com/69203345/130451212-a1c6a55b-650f-40e2-b869-be65ad99d443.PNG)
 
 language java로 바꿔줄것
 
 finish 누른 후 실행창
 
-![3](C:\Users\User\Desktop\업로드용 사진\3.PNG)
+![3](https://user-images.githubusercontent.com/69203345/130451220-b2194685-ab12-4dc3-81cd-2b4b549aa926.PNG)
 
 첫 프로젝트 로딩은 조금 시간이 걸린다 
 
 기다리면 폴더랑 다 뜬다!
 
-![image-20210823184425451](C:\Users\User\AppData\Roaming\Typora\typora-user-images\image-20210823184425451.png)
+![4](https://user-images.githubusercontent.com/69203345/130451223-3c430c5e-fe98-4d67-8b31-ca007d679d6d.PNG)
 
 activity_main,xml 탭을 열면 이런걸 볼 수 있는데
 
@@ -46,13 +46,13 @@ activity_main,xml 탭을 열면 이런걸 볼 수 있는데
 
 오른쪽 위에 핸드폰 모양 아이콘 (avd manager) 클릭
 
-![5](C:\Users\User\Desktop\업로드용 사진\5.PNG)
+![5](https://user-images.githubusercontent.com/69203345/130451225-9514cfa0-3e22-49d2-853e-aa5b61d1140f.PNG)
 
 저는 이걸로 했습니다
 
 next 누른후
 
-![6](C:\Users\User\Desktop\업로드용 사진\6.PNG)
+![6](https://user-images.githubusercontent.com/69203345/130451229-c5fdbdc4-3d28-4c43-b5e0-768322c8a9c0.PNG)
 
 이걸로 받았습니다
 
@@ -68,7 +68,7 @@ next 누른후
 
 그럼 이런게 뜬다!
 
-<img src="C:\Users\User\Desktop\업로드용 사진\7.PNG" alt="7" style="zoom: 67%;" />
+<img src="https://user-images.githubusercontent.com/69203345/130451233-2de7bf30-3ea6-4c6f-ad82-bf6866b9e1fb.PNG" alt="7" style="zoom:67%;" />
 
 만약 SDK 라이선스 오류가 뜬다면
 
@@ -96,11 +96,11 @@ File - Settings - Editor - General - Auto Import
 
 ## 화면에 버튼 추가
 
-![8](C:\Users\User\Desktop\업로드용 사진\8.PNG)
+![8](https://user-images.githubusercontent.com/69203345/130451720-6755bdfc-6d2b-4da4-b903-aeb85ab72701.PNG)
 
 왼쪽 팔레트에서 버튼을 드래그해서 화면에 붙이기
 
-<img src="C:\Users\User\AppData\Roaming\Typora\typora-user-images\image-20210823210851386.png" alt="image-20210823210851386" style="zoom:67%;" />
+<img src="https://user-images.githubusercontent.com/69203345/130451724-85c01f7d-aa0e-472f-90f2-f6bcc99468d6.PNG" alt="9" style="zoom:67%;" />
 
 오른쪽 에서 text 및 onClick 바꿔주기
 
@@ -108,7 +108,7 @@ onClick 에는 클릭 했을때 발생할 이벤트를 적어놓은 함수(메�
 
 대소문자 꼭 구분
 
-![image-20210823211431723](C:\Users\User\AppData\Roaming\Typora\typora-user-images\image-20210823211431723.png)
+<img src="https://user-images.githubusercontent.com/69203345/130451726-a03a2ad2-f9ee-4696-beee-3857e5feb217.PNG" alt="10" style="zoom: 80%;" />
 
 아직 MainActivity.java 파일에 적어놓은 함수가 없기때문에 오류가 뜨는것이 당연
 
