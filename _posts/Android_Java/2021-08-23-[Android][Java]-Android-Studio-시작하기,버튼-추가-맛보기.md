@@ -7,7 +7,7 @@ tags: [android_java]
 toc: true
 toc_sticky: true
 
-date: 2021-08-23 21:48:33 \
+date: 2021-08-23 21:48:33 
 ---
 
 # Android Studio 시작하기
