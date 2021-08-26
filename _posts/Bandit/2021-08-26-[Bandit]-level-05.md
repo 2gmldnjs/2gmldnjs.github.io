@@ -10,7 +10,7 @@ toc_sticky: true
 date: 2021-08-26 18:18:33
 ---
 
-[https://overthewire.org/wargames/]()
+[https://overthewire.org/wargames/]
 
 kali linux 에서 ssh 접속법
 
