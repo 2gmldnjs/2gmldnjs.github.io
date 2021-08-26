@@ -1,5 +1,5 @@
 ---
-title:  "[Bandit][OverTheWire] sample"
+title:  "[Bandit] sample"
 
 categories: bandit
 tags: [bandit,overthewire]
