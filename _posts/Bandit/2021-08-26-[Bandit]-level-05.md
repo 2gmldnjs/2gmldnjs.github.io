@@ -77,3 +77,12 @@ inhere 폴더로 이동후 ls -al로 숨김 파일을 찾았다
 ![image](https://user-images.githubusercontent.com/69203345/130936772-e8f56b7f-28b0-4839-8441-3c732a15383a.png)
 
 나머지는 특수문자등으로 읽을 수 없는걸로 봐선 이게 맞는듯
+
+나중에 알았지만 하나 하나 안봐도
+
+file ./* 을 이용하면 7번 파일만 ascii text이다 
+
+file ./* | grep "text" 를 사용하는 방법도 있다
+
+./* 은 현재 경로의 모든것을 의미한다
+
