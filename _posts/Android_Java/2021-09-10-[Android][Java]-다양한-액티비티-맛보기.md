@@ -989,17 +989,17 @@ strings.xml에서 볼 수 있다
 
 activity_main.xml
 
-![image-20210911195856733](C:\Users\User\AppData\Roaming\Typora\typora-user-images\image-20210911195856733.png)
+![ta-1](https://user-images.githubusercontent.com/69203345/132946156-56486ab8-7ebc-4b9b-90c3-11b06bbba54a.PNG)
 
 fragment_main.xml
 
-![image-20210911200025141](C:\Users\User\AppData\Roaming\Typora\typora-user-images\image-20210911200025141.png)
+![ta-2](https://user-images.githubusercontent.com/69203345/132946170-70507172-8789-431a-9f09-164a78c8ad3b.PNG)
 
 보이는 표시는 section_label이다, 보이는거 말고는 없다
 
 실행화면
 
-![image-20210911200618594](C:\Users\User\AppData\Roaming\Typora\typora-user-images\image-20210911200618594.png)
+![ta-3](https://user-images.githubusercontent.com/69203345/132946174-7f293497-6585-4dd7-9ef6-1098749553b3.PNG)
 
 PageViewModel.java
 
