@@ -345,6 +345,22 @@ activity_item_detail.xml
 
 ![image](https://user-images.githubusercontent.com/69203345/132848578-0c8cad7d-4960-4f28-996e-766d49b15656.png)
 
+activity_item_detail의 Component Tree
+
+![image](https://user-images.githubusercontent.com/69203345/132939088-6da360bb-a657-473f-a589-4a351ceda3df.png)
+
+nav_host_frament_item_detail 의 layout속성을 보면
+
+@layout/fragment_item_detail 로 되어있다
+
+살펴보자
+
+fragment_item_detail.xml
+
+<img src="https://user-images.githubusercontent.com/69203345/132939155-aa6a5dea-12ea-4c63-a3d5-d12ba3453862.png" alt="image" style="zoom: 67%;" />
+
+점선으로 돼있는 부분은 화면을 내렸을때 보여줄 부분이다 내용은 아무것도 없다
+
 fragment_item_list.xml
 
 ![image](https://user-images.githubusercontent.com/69203345/132848696-914acbdf-9e17-448f-9290-14b7810f568b.png)
@@ -353,14 +369,642 @@ fragment_item_list의 Component Tree
 
 ![image](https://user-images.githubusercontent.com/69203345/132849645-41dd2310-379b-40ca-9f79-f4a93fe8f0ec.png)
 
+itemDetailHostActivity.java
+
+```java
+package com.example.week2_primary_detail_flow;
+
+import android.os.Bundle;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.navigation.fragment.NavHostFragment;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
+import androidx.navigation.ui.AppBarConfiguration;
+import androidx.navigation.ui.NavigationUI;
+
+import com.example.week2_primary_detail_flow.databinding.ActivityItemDetailBinding;
+
+public class ItemDetailHostActivity extends AppCompatActivity {
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        ActivityItemDetailBinding binding = ActivityItemDetailBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+
+        NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.nav_host_fragment_item_detail);
+        NavController navController = navHostFragment.getNavController();
+        AppBarConfiguration appBarConfiguration = new AppBarConfiguration.
+                Builder(navController.getGraph())
+                .build();
+
+        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_item_detail);
+        return navController.navigateUp() || super.onSupportNavigateUp();
+    }
+}
+```
+
 실행화면
 
 키면 바로 보이는 화면임
 
 ![image](https://user-images.githubusercontent.com/69203345/132852401-ce3bade9-9598-46f6-9f5f-547e944ff278.png)
 
+itemListFragment.java
+
+```java
+package com.example.week2_primary_detail_flow;
+
+import android.content.ClipData;
+import android.content.ClipDescription;
+import android.os.Build;
+import android.os.Bundle;
+
+import androidx.core.view.ViewCompat;
+import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
+import androidx.recyclerview.widget.RecyclerView;
+
+import android.view.KeyEvent;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.example.week2_primary_detail_flow.databinding.FragmentItemListBinding;
+import com.example.week2_primary_detail_flow.databinding.ItemListContentBinding;
+
+import com.example.week2_primary_detail_flow.placeholder.PlaceholderContent;
+
+import java.util.List;
+
+/**
+ * A fragment representing a list of Items. This fragment
+ * has different presentations for handset and larger screen devices. On
+ * handsets, the fragment presents a list of items, which when touched,
+ * lead to a {@link ItemDetailFragment} representing
+ * item details. On larger screens, the Navigation controller presents the list of items and
+ * item details side-by-side using two vertical panes.
+ */
+public class ItemListFragment extends Fragment {
+
+    /**
+     * Method to intercept global key events in the
+     * item list fragment to trigger keyboard shortcuts
+     * Currently provides a toast when Ctrl + Z and Ctrl + F
+     * are triggered
+     */
+    ViewCompat.OnUnhandledKeyEventListenerCompat unhandledKeyEventListenerCompat = (v, event) -> {
+        if (event.getKeyCode() == KeyEvent.KEYCODE_Z && event.isCtrlPressed()) {
+            Toast.makeText(
+                    v.getContext(),
+                    "Undo (Ctrl + Z) shortcut triggered",
+                    Toast.LENGTH_LONG
+            ).show();
+            return true;
+        } else if (event.getKeyCode() == KeyEvent.KEYCODE_F && event.isCtrlPressed()) {
+            Toast.makeText(
+                    v.getContext(),
+                    "Find (Ctrl + F) shortcut triggered",
+                    Toast.LENGTH_LONG
+            ).show();
+            return true;
+        }
+        return false;
+    };
+
+    private FragmentItemListBinding binding;
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
+        binding = FragmentItemListBinding.inflate(inflater, container, false);
+        return binding.getRoot();
+
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        ViewCompat.addOnUnhandledKeyEventListener(view, unhandledKeyEventListenerCompat);
+
+        RecyclerView recyclerView = binding.itemList;
+
+        // Leaving this not using view binding as it relies on if the view is visible the current
+        // layout configuration (layout, layout-sw600dp)
+        View itemDetailFragmentContainer = view.findViewById(R.id.item_detail_nav_container);
+
+        /* Click Listener to trigger navigation based on if you have
+         * a single pane layout or two pane layout
+         */
+        View.OnClickListener onClickListener = itemView -> {
+            PlaceholderContent.PlaceholderItem item =
+                    (PlaceholderContent.PlaceholderItem) itemView.getTag();
+            Bundle arguments = new Bundle();
+            arguments.putString(ItemDetailFragment.ARG_ITEM_ID, item.id);
+            if (itemDetailFragmentContainer != null) {
+                Navigation.findNavController(itemDetailFragmentContainer)
+                        .navigate(R.id.fragment_item_detail, arguments);
+            } else {
+                Navigation.findNavController(itemView).navigate(R.id.show_item_detail, arguments);
+            }
+        };
+
+        /*
+         * Context click listener to handle Right click events
+         * from mice and trackpad input to provide a more native
+         * experience on larger screen devices
+         */
+        View.OnContextClickListener onContextClickListener = itemView -> {
+            PlaceholderContent.PlaceholderItem item =
+                    (PlaceholderContent.PlaceholderItem) itemView.getTag();
+            Toast.makeText(
+                    itemView.getContext(),
+                    "Context click of item " + item.id,
+                    Toast.LENGTH_LONG
+            ).show();
+            return true;
+        };
+
+        setupRecyclerView(recyclerView, onClickListener, onContextClickListener);
+    }
+
+    private void setupRecyclerView(
+            RecyclerView recyclerView,
+            View.OnClickListener onClickListener,
+            View.OnContextClickListener onContextClickListener
+    ) {
+
+        recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(
+                PlaceholderContent.ITEMS,
+                onClickListener,
+                onContextClickListener
+        ));
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
+    }
+
+    public static class SimpleItemRecyclerViewAdapter
+            extends RecyclerView.Adapter<SimpleItemRecyclerViewAdapter.ViewHolder> {
+
+        private final List<PlaceholderContent.PlaceholderItem> mValues;
+        private final View.OnClickListener mOnClickListener;
+        private final View.OnContextClickListener mOnContextClickListener;
+
+        SimpleItemRecyclerViewAdapter(List<PlaceholderContent.PlaceholderItem> items,
+                                      View.OnClickListener onClickListener,
+                                      View.OnContextClickListener onContextClickListener) {
+            mValues = items;
+            mOnClickListener = onClickListener;
+            mOnContextClickListener = onContextClickListener;
+        }
+
+        @Override
+        public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+
+            ItemListContentBinding binding =
+                    ItemListContentBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
+            return new ViewHolder(binding);
+
+        }
+
+        @Override
+        public void onBindViewHolder(final ViewHolder holder, int position) {
+            holder.mIdView.setText(mValues.get(position).id);
+            holder.mContentView.setText(mValues.get(position).content);
+
+            holder.itemView.setTag(mValues.get(position));
+            holder.itemView.setOnClickListener(mOnClickListener);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                holder.itemView.setOnContextClickListener(mOnContextClickListener);
+            }
+            holder.itemView.setOnLongClickListener(v -> {
+                // Setting the item id as the clip data so that the drop target is able to
+                // identify the id of the content
+                ClipData.Item clipItem = new ClipData.Item(mValues.get(position).id);
+                ClipData dragData = new ClipData(
+                        ((PlaceholderContent.PlaceholderItem) v.getTag()).content,
+                        new String[]{ClipDescription.MIMETYPE_TEXT_PLAIN},
+                        clipItem
+                );
+
+                if (Build.VERSION.SDK_INT >= 24) {
+                    v.startDragAndDrop(
+                            dragData,
+                            new View.DragShadowBuilder(v),
+                            null,
+                            0
+                    );
+                } else {
+                    v.startDrag(
+                            dragData,
+                            new View.DragShadowBuilder(v),
+                            null,
+                            0
+                    );
+                }
+                return true;
+            });
+        }
+
+        @Override
+        public int getItemCount() {
+            return mValues.size();
+        }
+
+        class ViewHolder extends RecyclerView.ViewHolder {
+            final TextView mIdView;
+            final TextView mContentView;
+
+            ViewHolder(ItemListContentBinding binding) {
+                super(binding.getRoot());
+                mIdView = binding.idText;
+                mContentView = binding.content;
+            }
+
+        }
+    }
+}
+```
+
 아이템 리스트를 눌렀을때 나오는 화면
 
 ![image](https://user-images.githubusercontent.com/69203345/132852463-e1332b38-87e9-41ac-8308-37f1f8ee76f1.png)
 
-내일 더 추가 할 예정입니니ㅣㅣㅣㅣ당ㅇㅇ
+itemDetailFragment.java
+
+```java
+package com.example.week2_primary_detail_flow;
+
+import android.content.ClipData;
+import android.os.Bundle;
+import android.view.DragEvent;
+
+import androidx.fragment.app.Fragment;
+
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
+
+import com.google.android.material.appbar.CollapsingToolbarLayout;
+import com.example.week2_primary_detail_flow.placeholder.PlaceholderContent;
+import com.example.week2_primary_detail_flow.databinding.FragmentItemDetailBinding;
+
+/**
+ * A fragment representing a single Item detail screen.
+ * This fragment is either contained in a {@link ItemListFragment}
+ * in two-pane mode (on larger screen devices) or self-contained
+ * on handsets.
+ */
+public class ItemDetailFragment extends Fragment {
+
+    /**
+     * The fragment argument representing the item ID that this fragment
+     * represents.
+     */
+    public static final String ARG_ITEM_ID = "item_id";
+
+    /**
+     * The placeholder content this fragment is presenting.
+     */
+    private PlaceholderContent.PlaceholderItem mItem;
+    private CollapsingToolbarLayout mToolbarLayout;
+    private TextView mTextView;
+
+    private final View.OnDragListener dragListener = (v, event) -> {
+        if (event.getAction() == DragEvent.ACTION_DROP) {
+            ClipData.Item clipDataItem = event.getClipData().getItemAt(0);
+            mItem = PlaceholderContent.ITEM_MAP.get(clipDataItem.getText().toString());
+            updateContent();
+        }
+        return true;
+    };
+    private FragmentItemDetailBinding binding;
+
+    /**
+     * Mandatory empty constructor for the fragment manager to instantiate the
+     * fragment (e.g. upon screen orientation changes).
+     */
+    public ItemDetailFragment() {
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        if (getArguments().containsKey(ARG_ITEM_ID)) {
+            // Load the placeholder content specified by the fragment
+            // arguments. In a real-world scenario, use a Loader
+            // to load content from a content provider.
+            mItem = PlaceholderContent.ITEM_MAP.get(getArguments().getString(ARG_ITEM_ID));
+        }
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+
+        binding = FragmentItemDetailBinding.inflate(inflater, container, false);
+        View rootView = binding.getRoot();
+
+        mToolbarLayout = rootView.findViewById(R.id.toolbar_layout);
+        mTextView = binding.itemDetail;
+
+        // Show the placeholder content as text in a TextView & in the toolbar if available.
+        updateContent();
+        rootView.setOnDragListener(dragListener);
+        return rootView;
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
+    }
+
+    private void updateContent() {
+        if (mItem != null) {
+            mTextView.setText(mItem.details);
+            if (mToolbarLayout != null) {
+                mToolbarLayout.setTitle(mItem.content);
+            }
+        }
+    }
+}
+```
+
+PlaceholderContent.java 파일
+
+```java
+package com.example.week2_primary_detail_flow.placeholder;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+/**
+ * Helper class for providing sample content for user interfaces created by
+ * Android template wizards.
+ * <p>
+ * TODO: Replace all uses of this class before publishing your app.
+ */
+public class PlaceholderContent {
+
+    /**
+     * An array of sample (placeholder) items.
+     */
+    public static final List<PlaceholderItem> ITEMS = new ArrayList<PlaceholderItem>();
+
+    /**
+     * A map of sample (placeholder) items, by ID.
+     */
+    public static final Map<String, PlaceholderItem> ITEM_MAP = new HashMap<String, PlaceholderItem>();
+
+    private static final int COUNT = 25;
+
+    static {
+        // Add some sample items.
+        for (int i = 1; i <= COUNT; i++) {
+            addItem(createPlaceholderItem(i));
+        }
+    }
+
+    private static void addItem(PlaceholderItem item) {
+        ITEMS.add(item);
+        ITEM_MAP.put(item.id, item);
+    }
+
+    private static PlaceholderItem createPlaceholderItem(int position) {
+        return new PlaceholderItem(String.valueOf(position), "Item " + position, makeDetails(position));
+    }
+
+    private static String makeDetails(int position) {
+        StringBuilder builder = new StringBuilder();
+        builder.append("Details about Item: ").append(position);
+        for (int i = 0; i < position; i++) {
+            builder.append("\nMore details information here.");
+        }
+        return builder.toString();
+    }
+
+    /**
+     * A placeholder item representing a piece of content.
+     */
+    public static class PlaceholderItem {
+        public final String id;
+        public final String content;
+        public final String details;
+
+        public PlaceholderItem(String id, String content, String details) {
+            this.id = id;
+            this.content = content;
+            this.details = details;
+        }
+
+        @Override
+        public String toString() {
+            return content;
+        }
+    }
+}
+```
+
+여기서 More details ~~~를 바꿀수 있다
+
+## Navigation Drawer Activity
+
+contain_main.xml 이다
+
+<img src="https://user-images.githubusercontent.com/69203345/132941454-bfa6038b-0a9a-44c7-981d-1334d8d287f1.png" alt="image" style="zoom:80%;" />
+
+component Tree에 보면 nav_host_fragment_contenet_main이 @navigation/mobile_navigation와 연결 되있는것을 볼수 있다
+
+mobile_navigation.xml
+
+![image](https://user-images.githubusercontent.com/69203345/132941672-00523445-9b34-4898-9c53-02c963b28ee6.png)
+
+nav_home, nav_gallay 등을 누르면 
+
+fragment_gallery등 관련 xml로 이동함
+
+fragment_gallery.xml
+
+<img src="https://user-images.githubusercontent.com/69203345/132941720-068d0610-74cb-4880-a1d7-afec165da183.png" alt="image" style="zoom:80%;" />
+
+다른 home, sildeshow 에서도 같은 디자인 이기때문에 사진은 생략하겠다
+
+activity_main.xml
+
+![image](https://user-images.githubusercontent.com/69203345/132942219-e5f8da98-fcec-44e2-bdc9-a2454e5f9133.png)
+
+MainActivity.java의 내용
+
+```java
+package com.example.week2_navigation_drawer_activity;
+
+import android.os.Bundle;
+import android.view.View;
+import android.view.Menu;
+
+import com.google.android.material.snackbar.Snackbar;
+import com.google.android.material.navigation.NavigationView;
+
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
+import androidx.navigation.ui.AppBarConfiguration;
+import androidx.navigation.ui.NavigationUI;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.week2_navigation_drawer_activity.databinding.ActivityMainBinding;
+
+public class MainActivity extends AppCompatActivity {
+
+    private AppBarConfiguration mAppBarConfiguration;
+    private ActivityMainBinding binding;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        binding = ActivityMainBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+
+        setSupportActionBar(binding.appBarMain.toolbar);
+        binding.appBarMain.fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+            }
+        });
+        DrawerLayout drawer = binding.drawerLayout;
+        NavigationView navigationView = binding.navView;
+        // Passing each menu ID as a set of Ids because each
+        // menu should be considered as top level destinations.
+        mAppBarConfiguration = new AppBarConfiguration.Builder(
+                R.id.nav_home, R.id.nav_gallery, R.id.nav_slideshow)
+                .setOpenableLayout(drawer)
+                .build();
+        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
+        NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
+        NavigationUI.setupWithNavController(navigationView, navController);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
+        return NavigationUI.navigateUp(navController, mAppBarConfiguration)
+                || super.onSupportNavigateUp();
+    }
+}
+```
+
+한번 쓱 보고 가자
+
+실행화면
+
+<img src="https://user-images.githubusercontent.com/69203345/132941813-c51bd607-94e3-4b8a-ae8b-ec8957b0248e.png" alt="image" style="zoom:67%;" />
+
+아까는 안보였는데 텍스트? 가 있다
+
+텍스트속성을 바꿨는데도 적용이 안되는것을 봐선 어디선가 따로 뭘 해줘야 하나보다
+
+GalleryViewModel.java 를 찾으면 바꿀수 있다
+
+```java
+package com.example.week2_navigation_drawer_activity.ui.gallery;
+
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.ViewModel;
+
+public class GalleryViewModel extends ViewModel {
+
+    private MutableLiveData<String> mText;
+
+    public GalleryViewModel() {
+        mText = new MutableLiveData<>();
+        mText.setValue("This is gallery fragment");
+    }
+
+    public LiveData<String> getText() {
+        return mText;
+    }
+}
+```
+
+다른 HomeViewModel, SlideshowViewModel을 찾으면 똑같이 바꿀수 있다
+
+<img src="https://user-images.githubusercontent.com/69203345/132941939-94954c1b-952e-486a-89d8-a8fc029d4c91.png" alt="image" style="zoom:67%;" />
+
+<img src="https://user-images.githubusercontent.com/69203345/132941951-df692a93-d25a-43fc-95c2-638e6620397a.png" alt="image" style="zoom:67%;" />
+
+달라보이는 건 없다
+
+<img src="https://user-images.githubusercontent.com/69203345/132942189-c1373769-548e-4964-86bb-2f4bcb7236f7.png" alt="image" style="zoom:67%;" />
+
+## Scrolling Activity
+
+content_scrolling.xml
+
+![image](https://user-images.githubusercontent.com/69203345/132945050-3112bf3c-e185-4eae-b344-d2593ba006f9.png)
+
+오른쪽 블루프린트에 보이지만 
+
+매우 많은 양의 내용을 볼수있다
+
+이 내용은 
+
+strings.xml에서 볼 수 있다
+
+실행화면
+
+<img src="https://user-images.githubusercontent.com/69203345/132945121-d90627f4-5bba-409a-90d8-8202325c91ae.png" alt="image" style="zoom:80%;" />
+
+## Tabbed Activity
+
+activity_main.xml
+
+![image-20210911195856733](C:\Users\User\AppData\Roaming\Typora\typora-user-images\image-20210911195856733.png)
+
+fragment_main.xml
+
+![image-20210911200025141](C:\Users\User\AppData\Roaming\Typora\typora-user-images\image-20210911200025141.png)
+
+보이는 표시는 section_label이다, 보이는거 말고는 없다
+
+실행화면
+
+![image-20210911200618594](C:\Users\User\AppData\Roaming\Typora\typora-user-images\image-20210911200618594.png)
+
+PageViewModel.java
+
+PlaceholderFragment.java
+
+SectionPagerAdapter.java
+
+를 보면 자세한 정보들을 볼수 있다
