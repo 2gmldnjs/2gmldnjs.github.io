@@ -1,0 +1,38 @@
+---
+title:  "[Bandit] level 1"
+
+categories: bandit
+tags: [bandit]
+
+toc: true
+toc_sticky: true
+
+date: 2021-09-12 23:14:10
+
+---
+
+# level 1
+
+**level1 / level1**
+
+![image](https://user-images.githubusercontent.com/69203345/132990677-fb3621f7-b68a-4cd9-a16e-2fd66bdaecbb.png)
+
+find 명령어를 사용해서 찾아보기
+
+> find / -user level2 -perm -4000 2> /dev/null
+
+![image](https://user-images.githubusercontent.com/69203345/132990776-53001c6d-abb8-4017-81fb-114e89ed53a1.png)
+
+가볍게 성공
+
+/bin/ExecuteMe 파일을 실행
+
+![lv3](https://user-images.githubusercontent.com/69203345/132990801-ffd61a67-9ffb-4194-9c91-fd40a0fe2249.PNG)
+
+/bin/bash 로 쉘을 불러옴
+
+![image](https://user-images.githubusercontent.com/69203345/132990830-22cf87c9-024e-4832-be79-061ed366c16a.png)
+
+my-pass명령어로 비밀번호 찾는거 까지.
+
+\+ my-pass 명령어는 ftz 서버에서만 되는 명령어 입니다.
