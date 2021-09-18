@@ -1,5 +1,5 @@
 ---
-title:  "[Android][Java] 사용자 인터페이스, 계산기 앱 만들기"
+title:  "[Android][Java] 사용자 인터페이스"
 
 categories: android_java
 tags: [android_java]
