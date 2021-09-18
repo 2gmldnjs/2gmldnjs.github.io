@@ -1,5 +1,5 @@
 ---
-title:  "[Android][Java] 사용자 인터페이스"
+title:  "[Android][Java] 사용자 인터페이스, 계산기 앱 만들기"
 
 categories: android_java
 tags: [android_java]
@@ -257,6 +257,252 @@ TextView클래스를 상속받아 작성됐으므로 TextView의 모든 속성�
 
 자식 뷰들을 수직 또는 수평으로 배치한다
 
+|      속성       |         관련 메소드         |                       설명                        |
+| :-------------: | :-------------------------: | :-----------------------------------------------: |
+|   orientation   |     setOrientation(int)     |      "horizontal": 수평,"vertical": 수직배치      |
+|     gravity     |       setGravity(int)       |        x축과 y축에 자식을 어떻게 배치할지         |
+| baselineAligned | setBaselineAligned(boolean) | false로 설정시 자식뷰들의 기준선을 정렬 하지 않음 |
 
+#### 가중치
 
-내일 더 추가..
+선형 레이아웃의 자식 뷰들의 가중치가 각각 1,2,3 이면, 남아있는 공간의 1/6,2/6,3/6을 할당받는다
+
+가중치를 1로 선언한 2개의 뷰들은 남아있는공간을 동일하게 차지함
+
+ ```xml
+     <EditText
+         android:id="@+id/editTextTextPersonName"
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content"
+         android:ems="10"
+         android:hint="To"
+         android:inputType="textPersonName" />
+ 
+     <EditText
+         android:id="@+id/editTextTextPersonName2"
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content"
+         android:ems="10"
+         android:hint="Subject"
+         android:inputType="textPersonName" />
+ 
+     <EditText
+         android:id="@+id/editTextTextPersonName3"
+         android:layout_width="match_parent"
+         android:layout_height="0dp"
+         android:layout_weight="1"
+         android:ems="10"
+         android:gravity="top"
+         android:hint="Message"
+         android:inputType="textPersonName" />
+ 
+     <Button
+         android:id="@+id/button"
+         android:layout_width="100dp"
+         android:layout_height="wrap_content"
+         android:layout_gravity="right"
+         android:text="Send" />
+ ```
+
+1,2번 에디트 텍스트의 가중치를 0(디폴트)
+
+3번 에티트 텍스트의 가중치를 1
+
+버튼의 layout_gravity 속성 right사용
+
+결과
+
+<img src="https://user-images.githubusercontent.com/69203345/133877760-a1df63a4-6d17-4745-bd03-2f8a26fdb36b.png" alt="image" style="zoom:80%;" />
+
+#### 테이블 레이아웃
+
+자식뷰 들을 테이블 형태로 배치
+
+html에서 테이블을 표시하는 방법과 비슷
+
+ #### 상대적 레이아웃
+
+특정한 뷰를 중심으로 상대적으로 지정하는 방법
+
+```xml
+    <TextView
+        android:id="@+id/address"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:text="주소를 입력하세요" />
+
+    <EditText
+        android:id="@+id/input"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/address"
+        android:background="@android:drawable/editbox_background"
+        android:inputType="textPersonName" />
+
+    <Button
+        android:id="@+id/cancel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/input"
+        android:layout_alignParentRight="true"
+        android:layout_marginLeft="10dp"
+        android:text="취소" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toLeftOf="@+id/cancel"
+        android:layout_alignTop="@id/cancel"
+        android:text="확인" />
+```
+
+결과
+
+<img src="https://user-images.githubusercontent.com/69203345/133878909-b7510cab-2a1a-4b04-ba9d-014d93b7672b.png" alt="image" style="zoom: 80%;" />
+
+# 코드로 UI작성
+
+## 코드를사용
+
+코드를 이용해서 레이아웃, 뷰들을 생성 할 수 있다.
+
+MainActivity.java를 수정한다
+
+```java
+package com.example.ui2;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+import android.os.Bundle;
+import android.widget.Button;
+import android.widget.LinearLayout;
+
+public class MainActivity extends AppCompatActivity {
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+// ============ 추가 ============
+        LinearLayout container = new LinearLayout(this);
+        container.setOrientation(LinearLayout.VERTICAL); //선형 레이아웃 생성
+
+        Button b1 = new Button(this);//버튼 생성
+        b1.setText("첫번째 버튼");
+        container.addView(b1);//생성한 버튼 화면에 추가
+
+        Button b2 = new Button(this);
+        b2.setText("두번째 버튼");
+        container.addView(b2);
+
+        setContentView(container);//만들어진 뷰 트리를 액티비티 화면으로 설정
+
+    }
+}
+```
+
+실행 화면
+
+![image](https://user-images.githubusercontent.com/69203345/133880352-f44316ff-88c0-4f1c-9ae8-84fa34837016.png)
+
+## XML과 코드를 둘다 사용
+
+activity_main.xml 사용
+
+```xml
+    <Button
+        android:id="@+id/button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="첫번째 버튼" />
+
+    <Button
+        android:id="@+id/button2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="두번째 버튼" />
+```
+
+버튼2개 생성후 속성 바꿔즘
+
+MainActivity.java 파일 수정
+
+```java
+package com.example.ui3;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+import android.os.Bundle;
+import android.widget.Button;
+
+public class MainActivity extends AppCompatActivity {
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+//============= 추가 ============
+        Button b1 = (Button) findViewById(R.id.button);
+        b1.setText("코드로 변경도 가능");
+        
+        Button b2 = (Button) findViewById(R.id.button2);
+        b2.setEnabled(false);
+    }
+}
+```
+
+실행 결과
+
+![image](https://user-images.githubusercontent.com/69203345/133880674-c47d09d5-4085-4941-8e3f-46c022b0024c.png)
+
+"첫번째 버튼" 이 아닌 "코드로 변경도 가능"으로 바뀌고,
+
+두번째 버튼은 화면은 보이지만 사용은 할 수 없는 상태로 변경 된것이 보인다
+
+## 코드로 레이아웃 속성 변경
+
+activity_main.xml
+
+```xml
+<Button
+    android:id="@+id/button"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="Button" />
+
+<Button
+    android:id="@+id/button2"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="Button" />
+```
+
+버튼 2개 추가 + 레이아웃에도 id 지정 해주기
+
+MainActivity.java
+
+```java
+package com.example.layoutbycodeactivity;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+import android.os.Bundle;
+import android.widget.LinearLayout;
+
+import java.util.logging.Level;
+
+public class MainActivity extends AppCompatActivity {
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+//=================== 추가 ==================
+        LinearLayout manager = (LinearLayout) findViewById(R.id.LayoutManager);
+        manager.setOrientation(LinearLayout.HORIZONTAL);      
+        
+    }
+}
+```
+
