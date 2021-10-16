@@ -458,7 +458,3 @@ public class MainActivity extends AppCompatActivity {
 
 <img src="https://user-images.githubusercontent.com/69203345/137583597-f57cfee1-a839-4040-a5e2-27df8c5cbe53.png" alt="Screenshot_1634379269" style="zoom: 33%;" />
 
-# 프래그먼트
-
-
-
