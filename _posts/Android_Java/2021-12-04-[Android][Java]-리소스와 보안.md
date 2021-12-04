@@ -242,7 +242,7 @@ Thread 클래스를 상속받아서 스레드 작성
 Runnable 인터페이스를 구현한후에 Thread 객체에 전달
 
 ## 예제 
-Thread 상속방법
+Thread 상속방법  
 MainActivity.java
 ```java
 public class MainActivity extends AppCompatActivity {
